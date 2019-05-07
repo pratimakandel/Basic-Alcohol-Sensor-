@@ -12,3 +12,5 @@ Breadboard
 Jumper wires
 Resistors 
 
+![alt text](https://github.com/pratimakandel/Basic-Alcohol-Sensor-/blob/master/unnamed.jpg)
+
