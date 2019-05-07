@@ -15,6 +15,5 @@ MQ-3 alcohol sensor,
 ![alt text](https://github.com/pratimakandel/Basic-Alcohol-Sensor-/blob/master/unnamed.jpg)
 
 
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/gzbYT90xz5I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+# Watch the video Here:
+https://youtu.be/gzbYT90xz5I
