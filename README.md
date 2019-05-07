@@ -4,13 +4,13 @@ This project is titled, “Car alcohol detector”. In this project, we interfac
 We have also added other exciting features such as neopixel and lcd. Accordingly, the neopixel lights up in different colors when the sensor prints the result out in the lcd. 
 
 # Hardware Required
-MQ-3 alcohol sensor 
-Arduino Uno
-Neopixel
-LCD screen 
-Breadboard 
-Jumper wires
-Resistors 
+MQ-3 alcohol sensor, 
+ Arduino Uno,
+ Neopixel,
+ LCD screen, 
+ Breadboard,
+ Jumper wires,
+ Resistors 
 
 ![alt text](https://github.com/pratimakandel/Basic-Alcohol-Sensor-/blob/master/unnamed.jpg)
 
