@@ -15,22 +15,16 @@ int sensorPin = A0;        //Pin the sensor is plugged into (analog)
 int sensorValue = 0;       //Value of sensor
 int lowerLimit = 71;      //The lowest point you wish to begin reading data
 int coolDown = 170;        //The highest value the sensor should return to before starting a new reading
-//int ledIndicator = 1;     //Optional LED read indication 1 = on, anything else = off
-//int iPin = 10;            //Pin for LED
 
 void setup() {
 strip.begin();// NeOPIXeL
 strip.show(); // Initialize all pixels to 'off'  NeoPIXEL
 Serial.begin (9600);            //Begin serial for output
 pinMode (sensorPin, INPUT);     //Set pin as input
-//pinMode (iPin,OUTPUT);
 oled.begin(16,2);
 } 
 
 void loop() {
-//colorWipe(strip.Color(0, 255, 0), 50); // Green
-//theaterChaseSober(strip.Color(127, 127, 127), 50);//white
-drunk(strip.Color(255, 0, 0), 50); //reddrunk
 
 sensorValue = analogRead(sensorPin);
 float v = (sensorValue/10)*(5.0/1024.0);
@@ -39,8 +33,6 @@ if(sensorValue > lowerLimit){
   oled.setCursor(0,10);//If sensor has gone above the threshold begin reading
   oled.println("Breath detected... Analyzing...");
   oled.display();
-//if(ledIndicator==1)                    //Optional led indication while reading
-  //digitalWrite(iPin,HIGH);
 }
 
 while(sensorValue > lowerLimit){        //While above threshold find highest value
@@ -84,6 +76,7 @@ if(result!=0){                //If we have a non-zero value output the result
     oled.println("You are drunk!");
     oled.setCursor(0,10);
     oled.display();
+    drunk(strip.Color(255, 0, 0), 50);
   }
 
   
@@ -99,7 +92,7 @@ if(result!=0){                //If we have a non-zero value output the result
 }
 
 delay(1000);
-//Serial.println(sensorValue); //Debug (Use to view current sensor value)
+
 }
 
 //neopixel
