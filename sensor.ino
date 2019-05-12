@@ -3,36 +3,38 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_FeatherOLED.h>
 #include <Adafruit_NeoPixel.h>
-#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
+
 
 #define PIN 5 //neopixel
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800); //neopixel
 
-LiquidCrystal oled(12, 11, 5, 4, 3, 2);
+LiquidCrystal_I2C oled(0x27, 16, 2);
 int result = 0;            //Used to store highest reading
 int sensorPin = A0;        //Pin the sensor is plugged into (analog)
 int sensorValue = 0;       //Value of sensor
-int lowerLimit = 71;      //The lowest point you wish to begin reading data
+int lowerLimit = 200;      //The lowest point you wish to begin reading data
 int coolDown = 170;        //The highest value the sensor should return to before starting a new reading
+
 
 void setup() {
 strip.begin();// NeOPIXeL
 strip.show(); // Initialize all pixels to 'off'  NeoPIXEL
 Serial.begin (9600);            //Begin serial for output
 pinMode (sensorPin, INPUT);     //Set pin as input
-oled.begin(16,2);
+oled.init();
+oled.backlight();
 } 
 
 void loop() {
-
 sensorValue = analogRead(sensorPin);
-float v = (sensorValue/10)*(5.0/1024.0);
-float mgL = 0.87*v;
+
 if(sensorValue > lowerLimit){ 
+  oled.clear();
   oled.setCursor(0,10);//If sensor has gone above the threshold begin reading
-  oled.println("Breath detected... Analyzing...");
-  oled.display();
+  oled.println("Breath Analyzing");
+  
 }
 
 while(sensorValue > lowerLimit){        //While above threshold find highest value
@@ -43,40 +45,41 @@ while(sensorValue > lowerLimit){        //While above threshold find highest val
   sensorValue = analogRead(sensorPin);
 }
 
-//digitalWrite(iPin,LOW);
 
-if(result!=0){                //If we have a non-zero value output the result
+
+if(result!=0){  
+  
+  float v = (result/10) * (5.0/1024.0);
+  float mgL = 0.33 * v;
+                              
   Serial.print("Result = ");
   Serial.println(result);
-  Serial.println(mgL);
 
   if(result >= 200 && result < 280){
     oled.clear();
-    oled.println("You are sober");
+    oled.print("You are sober");
     oled.setCursor(0,10);
-    oled.display();
-  }else if (result>=280 && result<400)
+    oled.print("BAC = ");
+    oled.print(mgL);
+    theaterChaseSober(strip.Color(127, 127, 127), 50);//white
+  }else if (result>=280 && result< 550)
   {
     oled.clear();
-    oled.println("Two or more beers.");
+    oled.print("I smell booze");
     oled.setCursor(0,10);
-    oled.display();
+    oled.print("BAC = ");
+    oled.print(mgL);
+    theaterChaseSober(strip.Color(0, 255, 0), 50);
    
   }
-  else if (result>=400 && result <650)
+  else 
   {
     oled.clear();
-    oled.println("I smell Oyzo!");
+    oled.print("You are drunk");
     oled.setCursor(0,10);
-    oled.display();
-  }
-  else
-  {
-    oled.clear();
-    oled.println("You are drunk!");
-    oled.setCursor(0,10);
-    oled.display();
-    drunk(strip.Color(255, 0, 0), 50);
+    oled.print("BAC = ");
+    oled.print(mgL);
+    drunk(strip.Color(255, 0, 0), 50); //reddrunk
   }
 
   
@@ -87,22 +90,15 @@ if(result!=0){                //If we have a non-zero value output the result
 
   
   result=0;
-  Serial.println("Ready to go!");
-  
+  oled.clear();
+  oled.print("Ready to go!");
+   
 }
 
 delay(1000);
 
 }
 
-//neopixel
-void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-    strip.setPixelColor(i, c);
-    strip.show();
-    delay(wait);
-  }
-}
 
 void theaterChaseSober(uint32_t c, uint8_t wait) {
   for (int j=0; j<30; j++) {  //do 10 cycles of chasing
